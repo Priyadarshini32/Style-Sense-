@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StyleSense - Your Recommendations</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 8px;
+            letter-spacing: 0.04em;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .header p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 1rem;
+            font-weight: 400;
+        }
+        .page-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .uploaded-image {
+            text-align: center;
+            margin-bottom: 32px;
+        }
+        .uploaded-image h3 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .image-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            
+
+            flex-wrap: wrap;
+        }
+        .uploaded-image img {
+            max-width: 300px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 3px solid #667eea;
+            max-height: 300px;
+            
+        }
+        .skin-tone-display {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .skin-tone-label {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.8);
+            font-weight: 500;
+        }
+        .skin-tone-swatch {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            background-color: var(--skin-tone-color);
+        }
+        .analysis-section {
+            background: rgba(255,255,255,0.12);
+            border-radius: 16px;
+            padding: 24px;
+            margin: 0 auto 32px auto;
+            border: 1px solid rgba(255,255,255,0.2);
+            max-width: 800px;
+            backdrop-filter: blur(20px);
+        }
+        .analysis-section h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 16px;
+        }
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+        }
+        .analysis-item {
+            background: rgba(255,255,255,0.18);
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+        .analysis-item strong {
+            color: #fff;
+            font-weight: 600;
+        }
+        .analysis-item p {
+            color: #f3f4f6;
+            font-size: 0.9rem;
+            margin-top: 4px;
+        }
+        .recommendations-section {
+            margin-bottom: 32px;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .recommendations-section h2 {
+            font-size: 1.75rem;
+            font-weight: 600;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .outfit-grid {
+            display: grid;
+            gap: 24px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .outfit-card {
+            background: rgba(255,255,255,0.13);
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+            backdrop-filter: blur(20px);
+        }
+        .outfit-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+        }
+        .outfit-items {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            align-items: start;
+        }
+        .outfit-item {
+            text-align: center;
+        }
+        .outfit-item img {
+            width: 250px;
+            height: 320px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+        .outfit-item img:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.2);
+            border-color: #667eea;
+        }
+        .outfit-item .placeholder {
+            width: 220px;
+            height: 220px;
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
+            font-size: 0.8rem;
+            border: 2px dashed #cbd5e1;
+            margin: 0 auto;
+        }
+        .product-name {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #fff;
+            margin-top: 12px;
+            line-height: 1.4;
+        }
+        .product-color {
+            font-size: 0.8rem;
+            color: #e0e7ff;
+            margin-top: 4px;
+            font-weight: 500;
+        }
+        .product-meta {
+            font-size: 0.7rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-top: 8px;
+            line-height: 1.3;
+        }
+        .no-outfits {
+            text-align: center;
+            padding: 48px;
+            color: #f3f4f6;
+        }
+        .no-outfits p {
+            font-size: 1.1rem;
+            margin-bottom: 16px;
+        }
+        .try-again-btn {
+            display: inline-block;
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+        .try-again-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(255, 107, 107, 0.4);
+            background: linear-gradient(135deg, #ff5252, #d63031);
+        }
+        .try-again-btn:active {
+            transform: translateY(0);
+        }
+        .back-section {
+            text-align: center;
+            margin-top: 32px;
+        }
+        @media (max-width: 768px) {
+            .page-title {
+                font-size: 1.5rem;
+            }
+            .outfit-items {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+            .analysis-grid {
+                grid-template-columns: 1fr;
+            }
+            .analysis-section {
+                padding: 12px;
+            }
+            .recommendations-section {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>StyleSense</h1>
+        <p>AI-Powered Fashion Recommendations</p>
+    </div>
+    <h1 class="page-title">Your Personalized Recommendations</h1>
+    {% if image_file %}
+    <div class="uploaded-image">
+        <h3>Your Photo</h3>
+        <div class="image-container">
+            <img src="{{ url_for('static', filename='uploads/' + image_file) }}" alt="Uploaded Image">
+            <div class="skin-tone-display">
+                <span class="skin-tone-label">Detected Skin Tone:</span>
+                <div class="skin-tone-swatch" style="--skin-tone-color: {{ skin_hex }};"></div>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    <div class="analysis-section">
+        <h2>Analysis Results</h2>
+        <div class="analysis-grid">
+            <div class="analysis-item">
+                <strong>Skin Tone:</strong>
+                <p>{{ skin_tone }}</p>
+            </div>
+            <div class="analysis-item">
+                <strong>Gender:</strong>
+                <p>{{ gender }}</p>
+            </div>
+            <div class="analysis-item">
+                <strong>Occasion(s):</strong>
+                <p>{{ usage|join(', ') }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="recommendations-section">
+        <h2>Recommended Outfits</h2>
+        {% if outfits %}
+            <div class="outfit-grid">
+                {% for outfit in outfits %}
+                <div class="outfit-card">
+                    <div class="outfit-items">
+                        <div class="outfit-item">
+                            <img src="{{ outfit.top.img }}" 
+                                 alt="Topwear"
+                                 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'placeholder\'>Image not available</div>';">
+                            <div class="product-name">{{ outfit.top.name }}</div>
+                        
+                            <div class="product-meta">
+                      
+                                <span>Type: {{ outfit.top.articletype }}</span><br>
+                                <span>Season: {{ outfit.top.season }}</span>
+                            </div>
+                        </div>
+                        <div class="outfit-item">
+                            <img src="{{ outfit.bottom.img }}" 
+                                 alt="Bottomwear"
+                                 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'placeholder\'>Image not available</div>';">
+                            <div class="product-name">{{ outfit.bottom.name }}</div>
+                        
+                            <div class="product-meta">
+                               
+                                <span>Type: {{ outfit.bottom.articletype }}</span><br>
+                                <span>Season: {{ outfit.bottom.season }}</span>
+                            </div>
+                        </div>
+                        <div class="outfit-item">
+                            <img src="{{ outfit.foot.img }}" 
+                                 alt="Footwear"
+                                 onerror="this.onerror=null;this.parentElement.innerHTML='<div class=\'placeholder\'>Image not available</div>';">
+                            <div class="product-name">{{ outfit.foot.name }}</div>
+                         
+                            <div class="product-meta">
+                            
+                                <span>Type: {{ outfit.foot.articletype }}</span><br>
+                                <span>Season: {{ outfit.foot.season }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="no-outfits">
+                <p>We couldn't generate complete outfits for {{ gender }} based on your preferences.</p>
+                <p>Please try uploading a different photo or adjusting your preferences.</p>
+            </div>
+        {% endif %}
+    </div>
+    <div class="back-section">
+        <a href="/upload" class="try-again-btn">Try Again</a>
+    </div>
+</body>
+</html>
